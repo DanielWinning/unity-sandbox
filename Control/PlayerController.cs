@@ -9,17 +9,12 @@ namespace RPG.Control
     {
         private Camera _mainCamera;
         private MovementController _movementController;
-        private NavMeshAgent _navMeshAgent;
         private Fighter _fighter;
-        private float _defaultSpeed;
-        private const float SprintSpeed = 15f;
 
         private void Start()
         {
             _mainCamera = Camera.main;
             _movementController = gameObject.AddComponent<MovementController>();
-            _navMeshAgent = GetComponent<NavMeshAgent>();
-            _defaultSpeed = _navMeshAgent.speed;
             _fighter = GetComponent<Fighter>();
         }
         
@@ -36,6 +31,7 @@ namespace RPG.Control
 
             foreach (RaycastHit hit in hits)
             {
+                // I don't like this double null check
                 if (hit.transform == null) continue;
                 
                 CombatTarget combatTarget = hit.transform.GetComponent<CombatTarget>();
@@ -58,30 +54,11 @@ namespace RPG.Control
             {
                 _movementController.MoveTo(hitInfo.point);
             }
-
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                Sprint();
-            }
-            else
-            {
-                StandardSpeed();
-            }
         }
 
         private Ray GetMouseRay()
         {
             return _mainCamera.ScreenPointToRay(Input.mousePosition);
-        }
-        
-        private void Sprint()
-        {
-            _navMeshAgent.speed = SprintSpeed;
-        }
-
-        private void StandardSpeed()
-        {
-            _navMeshAgent.speed = _defaultSpeed;
         }
     }
 }
