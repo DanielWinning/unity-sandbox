@@ -1,7 +1,6 @@
 ﻿using RPG.Combat;
 using RPG.Movement;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace RPG.Control
 {
@@ -21,10 +20,8 @@ namespace RPG.Control
         private void Update()
         { 
             if (InteractWithCombat()) return;
-            
-            if (InteractWithMovement()) return;
-            
-            print("Nothing to do here.");
+
+            InteractWithMovement();
         }
 
         private bool InteractWithCombat()
@@ -37,10 +34,7 @@ namespace RPG.Control
 
                 if (combatTarget == null) continue;
 
-                if (Input.GetMouseButtonDown(0))
-                {
-                    _fighter.Attack(combatTarget);
-                }
+                if (Input.GetMouseButtonDown(0)) _fighter.Attack(combatTarget);
 
                 return true;
             }
@@ -52,13 +46,11 @@ namespace RPG.Control
         {
             foreach (RaycastHit hit in GetRaycastHits())
             {
-                if (hit.transform == null) continue;
-
-                if (hit.transform.gameObject.CompareTag("CanMove"))
+                if (hit.transform != null && hit.transform.gameObject.CompareTag("CanMove"))
                 {
                     if (Input.GetMouseButton(0))
                     {
-                        _movementController.MoveTo(hit.point);
+                        _movementController.StartMoving(hit.point);
                         
                         if (_fighter.HasTarget()) _fighter.ClearTarget();
                     }
