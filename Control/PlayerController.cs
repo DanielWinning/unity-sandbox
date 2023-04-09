@@ -14,24 +14,23 @@ namespace RPG.Control
         private void Start()
         {
             _mainCamera = Camera.main;
-            _movementController = gameObject.AddComponent<MovementController>();
+            _movementController = GetComponent<MovementController>();
             _fighter = GetComponent<Fighter>();
         }
         
         private void Update()
-        {
-            InteractWithCombat();
-            InteractWithMovement();
+        { 
+            if (InteractWithCombat()) return;
+            
+            if (InteractWithMovement()) return;
+            
+            print("Nothing to do here.");
         }
 
-        private void InteractWithCombat()
+        private bool InteractWithCombat()
         {
-            RaycastHit[] hits = new RaycastHit[5];
-            Physics.RaycastNonAlloc(GetMouseRay(), hits);
-
-            foreach (RaycastHit hit in hits)
+            foreach (RaycastHit hit in GetRaycastHits())
             {
-                // I don't like this double null check
                 if (hit.transform == null) continue;
                 
                 CombatTarget combatTarget = hit.transform.GetComponent<CombatTarget>();
@@ -42,23 +41,44 @@ namespace RPG.Control
                 {
                     _fighter.Attack(combatTarget);
                 }
+
+                return true;
             }
+
+            return false;
         }
         
-        private void InteractWithMovement()
+        private bool InteractWithMovement()
         {
-            RaycastHit hitInfo;
-            Physics.Raycast(GetMouseRay(), out hitInfo);
-
-            if (Input.GetMouseButton(0))
+            foreach (RaycastHit hit in GetRaycastHits())
             {
-                _movementController.MoveTo(hitInfo.point);
+                if (hit.transform == null) continue;
+
+                if (hit.transform.gameObject.CompareTag("CanMove"))
+                {
+                    if (Input.GetMouseButton(0))
+                    {
+                        _movementController.MoveTo(hit.point);
+                    }
+
+                    return true;
+                }
             }
+            
+            return false;
         }
 
         private Ray GetMouseRay()
         {
             return _mainCamera.ScreenPointToRay(Input.mousePosition);
+        }
+
+        private RaycastHit[] GetRaycastHits()
+        {
+            RaycastHit[] hits = new RaycastHit[5];
+            Physics.RaycastNonAlloc(GetMouseRay(), hits);
+
+            return hits;
         }
     }
 }
