@@ -31,7 +31,6 @@ namespace RPG.Combat
 
         public void Attack(CombatTarget combatTarget)
         {
-            Debug.Log("Attack is triggered");
             _actionScheduler.StartAction(this);
             _target = combatTarget.transform;
         }
@@ -48,7 +47,6 @@ namespace RPG.Combat
 
         public void Cancel()
         {
-            print("Clearing target");
             ClearTarget();
         }
     }
