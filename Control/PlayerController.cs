@@ -59,6 +59,8 @@ namespace RPG.Control
                     if (Input.GetMouseButton(0))
                     {
                         _movementController.MoveTo(hit.point);
+                        
+                        if (_fighter.HasTarget()) _fighter.ClearTarget();
                     }
 
                     return true;

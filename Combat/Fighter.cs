@@ -7,7 +7,7 @@ namespace RPG.Combat
     {
         private Transform _target;
         private MovementController _movementController;
-        private float _weaponRange = 3.5f;
+        const float WeaponRange = 2f;
 
         public void Start()
         {
@@ -16,21 +16,31 @@ namespace RPG.Combat
 
         public void Update()
         {
-            if (_target != null)
+            if (HasTarget())
             {
                 _movementController.MoveTo(_target.position);
                 
-                if (Vector3.Distance(transform.position, _target.position) <= _weaponRange)
+                if (Vector3.Distance(transform.position, _target.position) <= WeaponRange)
                 {
                     _movementController.Stop();
-                    _target = null;
+                    ClearTarget();
                 }
             }
         }
-        
+
         public void Attack(CombatTarget combatTarget)
         {
             _target = combatTarget.transform;
+        }
+
+        public bool HasTarget()
+        {
+            return _target != null;
+        }
+
+        public void ClearTarget()
+        {
+            _target = null;
         }
     }
 }
