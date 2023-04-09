@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction
+    public class FighterController : MonoBehaviour, IAction
     {
         private Transform _target;
         private MovementController _movementController;
@@ -29,18 +29,18 @@ namespace RPG.Combat
             ClearTarget();
         }
 
-        public void Attack(CombatTarget combatTarget)
+        public void StartAttackAction(CombatTarget combatTarget)
         {
             _actionScheduler.StartAction(this);
             _target = combatTarget.transform;
         }
 
-        public bool HasTarget()
+        private bool HasTarget()
         {
             return _target != null;
         }
 
-        public void ClearTarget()
+        private void ClearTarget()
         {
             _target = null;
         }

@@ -27,7 +27,7 @@ namespace RPG.Movement
             _animator.SetFloat("forwardSpeed", localVelocity.z);
         }
 
-        public void StartMoving(Vector3 point)
+        public void StartMovementAction(Vector3 point)
         {
             _actionScheduler.StartAction(this);
             MoveTo(point);
@@ -46,7 +46,7 @@ namespace RPG.Movement
 
         public void Cancel()
         {
-            _navMeshAgent.isStopped = true;
+            Stop();
         }
     }
 }

@@ -8,13 +8,13 @@ namespace RPG.Control
     {
         private Camera _mainCamera;
         private MovementController _movementController;
-        private Fighter _fighter;
+        private FighterController _fighterController;
 
         private void Start()
         {
             _mainCamera = Camera.main;
             _movementController = GetComponent<MovementController>();
-            _fighter = GetComponent<Fighter>();
+            _fighterController = GetComponent<FighterController>();
         }
         
         private void Update()
@@ -34,7 +34,7 @@ namespace RPG.Control
 
                 if (combatTarget == null) continue;
 
-                if (Input.GetMouseButtonDown(0)) _fighter.Attack(combatTarget);
+                if (Input.GetMouseButtonDown(0)) _fighterController.StartAttackAction(combatTarget);
 
                 return true;
             }
@@ -46,17 +46,13 @@ namespace RPG.Control
         {
             foreach (RaycastHit hit in GetRaycastHits())
             {
-                if (hit.transform != null && hit.transform.gameObject.CompareTag("CanMove"))
-                {
-                    if (Input.GetMouseButton(0))
-                    {
-                        _movementController.StartMoving(hit.point);
-                        
-                        if (_fighter.HasTarget()) _fighter.ClearTarget();
-                    }
+                if (hit.transform == null) continue;
 
-                    return true;
-                }
+                if (!hit.transform.gameObject.CompareTag("CanMove")) continue;
+                
+                if (Input.GetMouseButton(0)) _movementController.StartMovementAction(hit.point);
+
+                return true;
             }
             
             return false;
