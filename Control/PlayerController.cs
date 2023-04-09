@@ -46,7 +46,7 @@ namespace RPG.Control
         {
             foreach (RaycastHit hit in GetRaycastHits())
             {
-                if (hit.transform == null) continue;
+                if (!HitHasTransform(hit)) continue;
 
                 if (!hit.transform.gameObject.CompareTag("CanMove")) continue;
                 
@@ -69,6 +69,11 @@ namespace RPG.Control
             Physics.RaycastNonAlloc(GetMouseRay(), hits);
 
             return hits;
+        }
+
+        private static bool HitHasTransform(RaycastHit hit)
+        {
+            return hit.transform != null;
         }
     }
 }
