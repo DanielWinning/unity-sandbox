@@ -32,7 +32,7 @@ namespace RPG.Control
                 
                 CombatTarget combatTarget = hit.transform.GetComponent<CombatTarget>();
 
-                if (combatTarget == null) continue;
+                if (combatTarget == null || combatTarget.GetComponent<Enemy>().isDead) continue;
 
                 if (Input.GetMouseButtonDown(0)) _fighterController.StartAttackAction(combatTarget);
 
@@ -42,20 +42,14 @@ namespace RPG.Control
             return false;
         }
         
-        private bool InteractWithMovement()
+        private void InteractWithMovement()
         {
             foreach (RaycastHit hit in GetRaycastHits())
             {
                 if (!HitHasTransform(hit)) continue;
 
-                if (!hit.transform.gameObject.CompareTag("CanMove")) continue;
-                
                 if (Input.GetMouseButton(0)) _movementController.StartMovementAction(hit.point);
-
-                return true;
             }
-            
-            return false;
         }
 
         private Ray GetMouseRay()

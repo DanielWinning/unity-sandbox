@@ -9,24 +9,36 @@ namespace RPG.Combat
         private Transform _target;
         private MovementController _movementController;
         private ActionScheduler _actionScheduler;
+        private Animator _animator;
         private const float WeaponRange = 2f;
+        private const float TimeBetweenAttacks = 1.3f;
+        private float _timeSinceLastAttack;
 
         public void Start()
         {
-            _movementController = GetComponent<MovementController>();
             _actionScheduler = GetComponent<ActionScheduler>();
+            _animator = GetComponent<Animator>();
+            _movementController = GetComponent<MovementController>();
         }
 
         public void Update()
         {
+            _timeSinceLastAttack += Time.deltaTime;
+            
             if (!HasTarget()) return;
             
             _movementController.MoveTo(_target.position);
 
-            if (Vector3.Distance(transform.position, _target.position) >= WeaponRange) return;
+            if (Vector3.Distance(transform.position, _target.position) > WeaponRange) return;
             
-            _movementController.Stop();
-            ClearTarget();
+            _movementController.Cancel();
+            
+            if (_timeSinceLastAttack >= TimeBetweenAttacks)
+            {
+                transform.LookAt(_target);
+                _animator.SetTrigger("attack");
+                _timeSinceLastAttack = 0;
+            }
         }
 
         public void StartAttackAction(CombatTarget combatTarget)
@@ -40,14 +52,20 @@ namespace RPG.Combat
             return _target != null;
         }
 
-        private void ClearTarget()
+        public void Cancel()
         {
             _target = null;
         }
 
-        public void Cancel()
+        // Animation Event
+        public void Hit()
         {
-            ClearTarget();
+            if (_target == null) return;
+            
+            Enemy enemy = _target.GetComponent<Enemy>();
+            enemy.TakeDamage(5f);
+            
+            Cancel();
         }
     }
 }
