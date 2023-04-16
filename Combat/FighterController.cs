@@ -10,8 +10,8 @@ namespace RPG.Combat
         private MovementController _movementController;
         private ActionScheduler _actionScheduler;
         private Animator _animator;
-        private const float WeaponRange = 2f;
-        private const float TimeBetweenAttacks = 1.3f;
+        private const float WeaponRange = 1.8f;
+        private const float TimeBetweenAttacks = 1.1f;
         private float _timeSinceLastAttack;
 
         public void Start()

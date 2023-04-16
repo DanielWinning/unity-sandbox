@@ -19,5 +19,10 @@ namespace RPG.Animation
             Vector3 localVelocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
             _animator.SetFloat("forwardSpeed", localVelocity.z);
         }
+
+        public void PlayDeathAnimation()
+        {
+            _animator.SetTrigger("death");
+        }
     }
 }
